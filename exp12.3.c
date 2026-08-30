@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+int main() {
+    int pages[50], frames[10];
+    int n, f, i, j, k, pos = 0;
+    int fault = 0, found;
+
+    printf("Enter Number of Pages: ");
+    scanf("%d", &n);
+    printf("Enter Reference String:\n");
+    for (i = 0; i < n; i++)
+        scanf("%d", &pages[i]);
+
+    printf("Enter Number of Frames: ");
+    scanf("%d", &f);
+
+    for (i = 0; i < f; i++)
+        frames[i] = -1;
+
+    for (i = 0; i < n; i++) {
+        found = 0;
+        for (j = 0; j < f; j++) {
+            if (frames[j] == pages[i]) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (found == 0) {
+            if (i < f) {
+                frames[i] = pages[i];
+                fault++;
+            } else {
+                int farthest = -1, opt = -1;
+                for (j = 0; j < f; j++) {
+                    int found_future = 0;
+                    for (k = i + 1; k < n; k++) {
+                        if (frames[j] == pages[k]) {
+                            if (k > farthest) {
+                                farthest = k;
+                                opt = j;
+                            }
+                            found_future = 1;
+                            break;
+                        }
+                    }
+                    if (!found_future) {
+                        opt = j;
+                        break;
+                    }
+                }
+                frames[opt] = pages[i];
+                fault++;
+            }
+        }
+    }
+
+    printf("Total Page Faults = %d\n", fault);
+    return 0;
+}
